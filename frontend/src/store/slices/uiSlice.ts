@@ -1,0 +1,89 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+interface Notification {
+  id: string;
+  type: 'success' | 'error' | 'warning' | 'info';
+  title: string;
+  message?: string;
+  duration?: number;
+}
+
+interface UIState {
+  notifications: Notification[];
+  isLoading: boolean;
+  modals: {
+    [key: string]: boolean;
+  };
+  sidebarOpen: boolean;
+  theme: 'light' | 'dark';
+}
+
+const initialState: UIState = {
+  notifications: [],
+  isLoading: false,
+  modals: {},
+  sidebarOpen: true,
+  theme: 'light',
+};
+
+const uiSlice = createSlice({
+  name: 'ui',
+  initialState,
+  reducers: {
+    addNotification: (state, action: PayloadAction<Omit<Notification, 'id'>>) => {
+      const notification: Notification = {
+        ...action.payload,
+        id: Date.now().toString(),
+      };
+      state.notifications.push(notification);
+    },
+    
+    removeNotification: (state, action: PayloadAction<string>) => {
+      state.notifications = state.notifications.filter(
+        notification => notification.id !== action.payload
+      );
+    },
+    
+    clearNotifications: (state) => {
+      state.notifications = [];
+    },
+    
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
+    
+    openModal: (state, action: PayloadAction<string>) => {
+      state.modals[action.payload] = true;
+    },
+    
+    closeModal: (state, action: PayloadAction<string>) => {
+      state.modals[action.payload] = false;
+    },
+    
+    toggleSidebar: (state) => {
+      state.sidebarOpen = !state.sidebarOpen;
+    },
+    
+    setSidebarOpen: (state, action: PayloadAction<boolean>) => {
+      state.sidebarOpen = action.payload;
+    },
+    
+    setTheme: (state, action: PayloadAction<'light' | 'dark'>) => {
+      state.theme = action.payload;
+    },
+  },
+});
+
+export const {
+  addNotification,
+  removeNotification,
+  clearNotifications,
+  setLoading,
+  openModal,
+  closeModal,
+  toggleSidebar,
+  setSidebarOpen,
+  setTheme,
+} = uiSlice.actions;
+
+export default uiSlice.reducer;
