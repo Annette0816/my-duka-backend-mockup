@@ -45,7 +45,7 @@ class AdminInvitation(Resource):
         )
 
         # Construct the invitation link for the frontend
-        invitation_link = f"http://localhost:5000/auth/register-admin-with-token?token={invitation_token}"
+        invitation_link = f"https://myduka-frontend.vercel.app/auth/register-admin-with-token?token={invitation_token}"
 
         try:
             msg = Message(
